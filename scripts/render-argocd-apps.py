@@ -10,7 +10,7 @@ from pathlib import Path
 from platform_inventory import load_inventory, platform_constants, platform_repo_root
 
 repo_root = platform_repo_root()
-inventory_path = os.environ.get("ARGOCD_APPS_FILE", str(repo_root / "argocd/apps.yaml"))
+inventory_path = os.environ.get("APPS_FILE") or os.environ.get("ARGOCD_APPS_FILE") or str(repo_root / "argocd/apps.yaml")
 
 inventory = load_inventory(Path(inventory_path))
 apps = inventory["apps"]
