@@ -6,10 +6,6 @@ PLATFORM_REPO_ROOT ?= $(abspath ../platform-gitops)
 PLATFORM_REPO_URL ?=
 GITHUB_TOKEN      ?=
 GITLAB_TOKEN      ?=
-APPS_BASE_DIR     ?= $(CURDIR)
-SIBLING_PROJECTS_DIR ?= $(abspath $(APPS_BASE_DIR)/..)
-SEED_SIBLING_PROJECTS ?= false
-CI_TEMPLATE_SOURCE_DIR ?= $(abspath ../ci-templates)
 ARGOCD_NAMESPACE  ?= argocd
 GITLAB_NAMESPACE  ?= gitlab
 

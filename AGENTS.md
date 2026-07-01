@@ -61,8 +61,6 @@ nouvelles apps sont créées vides sur GitLab.
 | `PLATFORM_REPO_URL` | URL GitHub pour clone temporaire (mode MR) |
 | `GITLAB_URL` | URL externe GitLab (défaut : `https://gitlab.192.168.33.100.nip.io`) |
 | `GITLAB_NAMESPACE` | Namespace K8s GitLab (défaut : `gitlab`) |
-| `CI_TEMPLATE_SOURCE_DIR` | Chemin local vers `ci-templates` |
-| `APPS_BASE_DIR` | Répertoire de base pour résoudre les chemins relatifs des apps |
 
 ## Ce qu'il ne faut pas faire
 
