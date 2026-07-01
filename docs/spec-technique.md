@@ -33,7 +33,10 @@ dépôt manifests.
 
 La synchronisation des projets GitLab n'est plus portée par `toolbox` : les
 projets sont déclarés dans `gitlab-projects-iac` puis appliqués par le
-`Terraform/gitlab-iac`.
+`Terraform/gitlab-iac`. `scripts/render-gitlab-projects.py` génère le fichier
+`apps.auto.tfvars.json` consommé par ce Terraform à partir du même inventaire
+(`argocd/apps.yaml` + `argocd/apps/*.yaml`), avec un objet `{name, description}`
+par app.
 
 ## Maintenance
 

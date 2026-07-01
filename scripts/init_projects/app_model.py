@@ -12,6 +12,8 @@ def build_app(config: InitProjectConfig) -> dict:
             "path": config.kustomize_path,
         },
     }
+    if config.description:
+        app["description"] = config.description
     # sourceURL = URL externe d'origine, distincte de repoURL (URL GitLab de la plateforme,
     # dérivée par convention dans _normalize_app).
     if _is_git_url(config.code_ref):

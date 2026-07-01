@@ -35,6 +35,7 @@ class InitProjectConfig:
     kustomize_path: str
     services: list[str]
     has_preprod: bool
+    description: str
     apps_dir: Path
 
 
@@ -66,6 +67,7 @@ def load_config(argv: list[str]) -> InitProjectConfig:
         kustomize_path=kustomize_path,
         services=services,
         has_preprod=env_bool("HAS_PREPROD", True),
+        description=os.environ.get("APP_DESCRIPTION", ""),
         apps_dir=_resolve_apps_dir(apps_file),
     )
 

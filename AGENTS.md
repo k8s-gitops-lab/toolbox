@@ -12,6 +12,7 @@ credentials ArgoCD sans checkout actif de `platform-cicd`.
 |---------|------|
 | `scripts/platform_inventory.py` | Modèle de données partagé (chargement et normalisation de l'inventaire) |
 | `scripts/init-project.py` | Onboarding d'une app (met à jour `argocd/apps/<app>/`) |
+| `scripts/render-gitlab-projects.py` | Génère `apps.auto.tfvars.json` (liste des apps + description) pour `gitlab-projects-iac`, à partir de l'inventaire `platform-gitops` |
 | `scripts/argocd-repo-creds.py` | Crée les secrets ArgoCD pour les dépôts manifests privés |
 | `scripts/get-gitlab-token.py` | Récupère un token GitLab pour les opérations locales |
 | `scripts/delete-project.py` / `delete_projects.py` | Suppression d'apps de l'inventaire |
@@ -30,7 +31,23 @@ GITHUB_TOKEN=<token> make init-project
 ```
 
 Les projets GitLab ne sont plus seedés depuis `toolbox`. Ils sont déclarés dans
-`gitlab-projects-iac` et appliqués par le `Terraform/gitlab-iac`.
+`gitlab-projects-iac` (fichier généré `apps.auto.tfvars.json`, produit par
+`render-gitlab-projects.py`) et appliqués par le `Terraform/gitlab-iac`.
+
+## Pipeline d'onboarding automatique
+
+Depuis l'automatisation ajoutée dans `platform-gitops` (pipeline
+`.gitlab-ci.yml`, exécuté sur le mirror GitLab interne du dépôt), une simple
+PR sur GitHub ajoutant `argocd/apps/<app>.yaml` (avec au minimum `name`,
+`description` et `services`) suffit à déclencher :
+1. la régénération des manifests ArgoCD (`platform-cicd/scripts/render-argocd-apps.py`) ;
+2. la régénération de `gitlab-projects-iac/terraform/apps.auto.tfvars.json`
+   (`toolbox/scripts/render-gitlab-projects.py`), qui fait ensuite créer/mettre
+   à jour les projets GitLab via Terraform.
+
+Le champ `description` est optionnel, transparent pour `_normalize_app`
+(copié tel quel), et propagé à la fois dans l'`AppProject` ArgoCD
+(`spec.description`) et dans la description du projet GitLab.
 
 ## Variables d'environnement importantes
 
