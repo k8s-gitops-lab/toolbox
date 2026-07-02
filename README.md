@@ -2,6 +2,12 @@
 
 Scripts partagés pour piloter les projets `poc-devops`.
 
+Ce repo porte le détail technique du **Parcours 2** décrit dans
+[`control-plane/README.md`](../control-plane/README.md#parcours-2--une-équipe-applicative-crée-un-projet) :
+comment une équipe applicative onboarde un projet sur une plateforme déjà en
+place. Pour le bootstrap de la plateforme elle-même (Parcours 1), voir
+`control-plane`.
+
 Les scripts de bootstrap restent utilisables depuis `platform-cicd`. Cette
 toolbox contient une copie réutilisable des utilitaires Python, avec une racine
 GitOps configurable. Par defaut, cette racine est `../platform-gitops`.
@@ -29,6 +35,20 @@ python3 /chemin/toolbox/scripts/init-project.py helloworld
 Le script clone temporairement le dépôt GitOps, ajoute ou met à jour
 `argocd/apps/helloworld/`, pousse une branche `toolbox/add-helloworld`, puis
 ouvre une pull request.
+
+Au merge de cette pull request, le pipeline `.gitlab-ci.yml` du projet
+GitLab `platform-gitops` (développé sur GitLab, mirroré vers GitHub)
+déclenche automatiquement, sans action supplémentaire :
+
+1. la régénération des manifests ArgoCD (`AppProject`/`ApplicationSet`) via
+   `platform-cicd/scripts/render-argocd-apps.py` ;
+2. la régénération de `gitlab-projects-iac/terraform/apps.auto.tfvars.json`
+   via `render-gitlab-projects.py` (voir "Scripts" ci-dessous), qui fait
+   ensuite créer ou mettre à jour le projet GitLab applicatif via Terraform.
+
+Les credentials ArgoCD pour accéder au dépôt manifests privé sont
+provisionnés séparément par `argocd-repo-creds.py` (voir "Utilisation avec
+checkout GitOps").
 
 Si les dépôts applicatifs sont dans un autre dossier:
 
@@ -73,18 +93,23 @@ PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/init-project.py helloworld
 PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/init-project.py ../helloworld ../helloworld-iac
 PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/delete-project.py helloworld
 PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/argocd-repo-creds.py
-python3 ../toolbox/scripts/gitlab-runner-token.py
+python3 ../toolbox/scripts/render-gitlab-projects.py
 ```
+
+Le token runner GitLab (`gitlab-runner-token.py`) est un script de bootstrap
+plateforme, pas d'onboarding applicatif : il vit dans `platform-cicd/scripts/`
+(voir `platform-cicd/AGENTS.md`).
 
 Depuis n'importe quel autre répertoire, renseigner `PLATFORM_REPO_ROOT` avec le chemin absolu du dépôt `platform-gitops`.
 
 ## Scripts
 
-- `filter-argocd-install.py`: filtre le manifeste d'installation ArgoCD.
 - `init-project.py` et `init_projects/`: ajoute ou met à jour une app dans `argocd/apps/<app>/`.
-- `delete-project.py`: supprime une app de `argocd/apps/<app>/` et ouvre une pull/merge request en mode `PLATFORM_REPO_URL`.
-- `gitlab-runner-token.py`: crée le token runner GitLab et le Secret Kubernetes associé.
+- `delete-project.py` et `delete_projects.py`: supprime une app de `argocd/apps/<app>/` et ouvre une pull/merge request en mode `PLATFORM_REPO_URL`.
+- `render-gitlab-projects.py`: génère `apps.auto.tfvars.json` (liste des apps + description) pour `gitlab-projects-iac`, à partir de l'inventaire `platform-gitops`.
 - `argocd-repo-creds.py`: crée les credentials ArgoCD pour les dépôts manifests privés.
+- `get-gitlab-token.py`: récupère un token GitLab pour les opérations locales.
+- `platform_inventory.py`: modèle de données partagé (chargement et normalisation de l'inventaire) ; une copie synchronisée existe dans `platform-cicd/scripts/`.
 - Les projets GitLab et dépôts applicatifs sont déclarés dans `gitlab-projects-iac`
   puis appliqués par le `Terraform/gitlab-iac`.
 
