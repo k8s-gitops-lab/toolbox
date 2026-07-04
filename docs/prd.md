@@ -7,14 +7,16 @@ projets du POC sans dépendre directement d'un checkout actif de
 `platform-cicd`.
 
 La vision globale, le modèle d'onboarding et les limites du POC sont dans
-`../../platform-cicd/docs/prd.md`.
+`../../control-plane/docs/prd.md`.
 
 ## Produit attendu
 
 La toolbox doit permettre :
 
-- d'ajouter une application à l'inventaire plateforme ;
-- de supprimer une application de cet inventaire ;
+- de supprimer une application de l'inventaire plateforme (l'ajout se fait
+  par MR directe sur `platform-gitops`, sans script) ;
+- de générer `apps.auto.tfvars.json` pour `gitlab-projects-iac` depuis
+  l'inventaire ;
 - de créer les credentials ArgoCD pour les dépôts manifests privés ;
 - de récupérer un token GitLab utile aux opérations locales.
 
@@ -33,7 +35,6 @@ La toolbox doit permettre :
 - Les scripts acceptent `PLATFORM_REPO_URL` et `GITHUB_TOKEN` pour travailler
   via clone temporaire et pull request GitHub. Cette URL doit pointer vers le
   dépôt GitOps source sur GitHub.
-- L'onboarding génère ou met à jour `argocd/apps/<app>.yaml`.
 - La suppression retire l'entrée d'application sans supprimer les dépôts
   applicatifs.
 - Les commandes principales sont disponibles depuis le `Makefile`.

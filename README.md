@@ -24,18 +24,10 @@ pip install -r requirements.txt
 
 Il n'y a pas de script d'onboarding : l'équipe applicative ouvre directement
 une pull/merge request sur `platform-gitops` ajoutant
-`argocd/apps/<app>.yaml` (au minimum `name`, `description`, `services`,
-`hasPreprod`). Voir un fichier existant dans `argocd/apps/` comme modèle.
-
-Au merge de cette pull request, le pipeline `.gitlab-ci.yml` du projet
-GitLab `platform-gitops` (développé sur GitLab, mirroré vers GitHub)
-déclenche automatiquement, sans action supplémentaire :
-
-1. la régénération des manifests ArgoCD (`AppProject`/`ApplicationSet`) via
-   `platform-cicd/scripts/render-argocd-apps.py` ;
-2. la régénération de `gitlab-projects-iac/terraform/apps.auto.tfvars.json`
-   via `render-gitlab-projects.py` (voir "Scripts" ci-dessous), qui fait
-   ensuite créer ou mettre à jour le projet GitLab applicatif via Terraform.
+`argocd/apps/<app>.yaml`. Le merge déclenche automatiquement toute la chaîne
+(rendu ArgoCD, inventaire Terraform, création des projets GitLab) — détail
+dans `platform-gitops/docs/spec-fonctionnelle.md`, section "Flux d'onboarding
+d'une application".
 
 Les credentials ArgoCD pour accéder au dépôt manifests privé sont
 provisionnés séparément par `argocd-repo-creds.py` (voir "Utilisation avec
