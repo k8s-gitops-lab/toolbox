@@ -14,6 +14,7 @@ def apps_tfvars(apps_file: Path) -> dict:
     apps = [
         {
             "name": app["name"],
+            "group": app["group"],
             "description": app.get("description", ""),
             "importFromGithub": app.get("importFromGithub", False),
         }
