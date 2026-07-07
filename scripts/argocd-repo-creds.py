@@ -5,6 +5,7 @@
 import base64
 import json
 import os
+import ssl
 import subprocess
 import sys
 import urllib.error
@@ -17,11 +18,20 @@ from platform_inventory import load_inventory, platform_repo_root
 
 GITLAB_NAMESPACE = os.environ.get("GITLAB_NAMESPACE", "gitlab")
 GITLAB_URL = os.environ.get("GITLAB_URL", "https://gitlab.192.168.33.100.nip.io")
+GITLAB_INSECURE_TLS = os.environ.get("GITLAB_INSECURE_TLS", "true").lower() not in ("0", "false", "no")
 ARGOCD_NAMESPACE = os.environ.get("ARGOCD_NAMESPACE", "argocd")
 APPS_FILE = Path(os.environ.get(
     "APPS_FILE",
     platform_repo_root() / "argocd/apps.yaml",
 ))
+
+
+def _ssl_ctx():
+    ctx = ssl.create_default_context()
+    if GITLAB_INSECURE_TLS:
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+    return ctx
 
 
 def kube_secret_field(namespace, name, jsonpath):
@@ -49,7 +59,7 @@ def http(url, method="GET", data=None, token=None):
         headers["Content-Type"] = "application/x-www-form-urlencoded"
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=_ssl_ctx()) as resp:
             return resp.status, json.loads(resp.read() or b"null")
     except urllib.error.HTTPError as e:
         return e.code, {}

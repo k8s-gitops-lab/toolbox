@@ -9,6 +9,7 @@ Usage :
 import base64
 import json
 import os
+import ssl
 import subprocess
 import sys
 import urllib.error
@@ -17,6 +18,15 @@ import urllib.request
 
 GITLAB_NAMESPACE = os.environ.get("GITLAB_NAMESPACE", "gitlab")
 GITLAB_URL = os.environ.get("GITLAB_URL", "https://gitlab.192.168.33.100.nip.io")
+GITLAB_INSECURE_TLS = os.environ.get("GITLAB_INSECURE_TLS", "true").lower() not in ("0", "false", "no")
+
+
+def _ssl_ctx():
+    ctx = ssl.create_default_context()
+    if GITLAB_INSECURE_TLS:
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+    return ctx
 
 
 def kube_secret_field(namespace, name, jsonpath):
@@ -39,7 +49,7 @@ def http_post(url, data):
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=_ssl_ctx()) as resp:
             return json.loads(resp.read())
     except urllib.error.HTTPError as e:
         return json.loads(e.read() or b"{}")
