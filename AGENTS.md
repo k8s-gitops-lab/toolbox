@@ -14,7 +14,6 @@ application se fait par pull/merge request directe sur `platform-gitops`
 |---------|------|
 | `scripts/platform_inventory.py` | Modèle de données partagé (chargement et normalisation de l'inventaire) |
 | `scripts/render-gitlab-projects.py` | Génère `apps.auto.tfvars.json` (liste des apps + description) pour `gitlab-projects-iac`, à partir de l'inventaire `platform-gitops` |
-| `scripts/argocd-repo-creds.py` | Crée les secrets ArgoCD pour les dépôts manifests privés |
 | `scripts/get-gitlab-token.py` | Récupère un token GitLab pour les opérations locales |
 | `scripts/delete-project.py` / `delete_projects.py` | Suppression d'apps de l'inventaire |
 | `scripts/check-app-gitlab-ci.py` | Vérifie que `<app>/.gitlab-ci.yml` (SERVICES, SERVICE_NAME, MANIFESTS_PROJECT_PATH, MANIFESTS_PATH, HAS_PREPROD) n'a pas dérivé de l'inventaire |
@@ -23,7 +22,7 @@ application se fait par pull/merge request directe sur `platform-gitops`
 
 **Mode local** — dépôt `platform-gitops` cloné localement :
 ```bash
-PLATFORM_REPO_ROOT=../platform-gitops make argocd-repo-creds
+PLATFORM_REPO_ROOT=../platform-gitops make check-app-gitlab-ci APP=helloworld GITLAB_CI_FILE=../helloworld/.gitlab-ci.yml
 ```
 
 **Mode MR** — clone temporaire depuis GitHub :

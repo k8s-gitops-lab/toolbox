@@ -30,8 +30,8 @@ dans `platform-gitops/docs/spec-fonctionnelle.md`, section "Flux d'onboarding
 d'une application".
 
 Les credentials ArgoCD pour accéder au dépôt manifests privé sont
-provisionnés séparément par `argocd-repo-creds.py` (voir "Utilisation avec
-checkout GitOps").
+fabriqués en continu par External Secrets Operator (ExternalSecrets générés
+par `platform-cicd/scripts/render-argocd-apps.py`) : aucune action toolbox.
 
 ## Supprimer un projet sans checkout GitOps
 
@@ -53,7 +53,6 @@ Depuis le dépôt GitOps, pour les opérations d'administration:
 
 ```sh
 PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/delete-project.py helloworld
-PLATFORM_REPO_ROOT="$PWD" python3 ../toolbox/scripts/argocd-repo-creds.py
 python3 ../toolbox/scripts/render-gitlab-projects.py
 ```
 
@@ -67,7 +66,6 @@ Depuis n'importe quel autre répertoire, renseigner `PLATFORM_REPO_ROOT` avec le
 
 - `delete-project.py` et `delete_projects.py`: supprime une app de `argocd/apps/<app>.yaml` et ouvre une pull/merge request en mode `PLATFORM_REPO_URL`.
 - `render-gitlab-projects.py`: génère `apps.auto.tfvars.json` (liste des apps + description) pour `gitlab-projects-iac`, à partir de l'inventaire `platform-gitops`.
-- `argocd-repo-creds.py`: crée les credentials ArgoCD pour les dépôts manifests privés.
 - `get-gitlab-token.py`: récupère un token GitLab pour les opérations locales.
 - `platform_inventory.py`: modèle de données partagé (chargement et normalisation de l'inventaire) ; une copie synchronisée existe dans `platform-cicd/scripts/`.
 - Les projets GitLab et dépôts applicatifs sont déclarés dans `gitlab-projects-iac`

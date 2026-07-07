@@ -4,7 +4,6 @@
 
 - `Makefile` enveloppe les commandes principales.
 - `scripts/delete-project.py` supprime une app de l'inventaire.
-- `scripts/argocd-repo-creds.py` crée les credentials ArgoCD.
 - `scripts/platform_git.py` gère les opérations Git/MR en mode distant.
 - `scripts/platform_inventory.py` lit l'inventaire GitOps.
 

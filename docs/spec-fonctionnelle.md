@@ -17,8 +17,10 @@ dépôts GitLab ni les ressources déjà déployées.
 
 La toolbox expose aussi :
 
-- `argocd-repo-creds.py` pour enregistrer les credentials manifests ;
 - `get-gitlab-token.py` pour récupérer un token d'administration local.
+
+Les credentials manifests d'ArgoCD ne passent plus par la toolbox : ils sont
+fabriqués en continu par External Secrets Operator.
 
 La création ou mise à jour des projets GitLab est portée par
 `gitlab-projects-iac`, appliqué par le `Terraform/gitlab-iac`.
