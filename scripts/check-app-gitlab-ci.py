@@ -3,7 +3,7 @@
 derivees de l'inventaire argocd/apps/<app>.yaml (platform-gitops).
 
 L'inventaire est cense etre la source de verite unique de l'app (App
-standard, cf. control-plane/CONTEXT.md) mais SERVICES/SERVICE_NAME/
+standard, cf. cockpit/CONTEXT.md) mais SERVICES/SERVICE_NAME/
 MANIFESTS_PROJECT_PATH/MANIFESTS_PATH/HAS_PREPROD sont aujourd'hui recopies
 a la main dans le .gitlab-ci.yml de l'app, sans controle. Ce script rend
 cette source de verite opposable en detectant toute derive.

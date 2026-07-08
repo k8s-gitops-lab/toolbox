@@ -38,6 +38,6 @@ par app.
 
 ## Maintenance
 
-Le bootstrap technique reste dans `platform-cicd`. La toolbox opère sur
+Le bootstrap technique reste dans `platform-bootstrap`. La toolbox opère sur
 `platform-gitops` par défaut via `PLATFORM_REPO_ROOT`, afin que les opérations
 d'onboarding et de génération ciblent le dépôt suivi par ArgoCD.

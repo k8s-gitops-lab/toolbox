@@ -3,8 +3,8 @@
 ## Rôle du dépôt
 
 `toolbox` regroupe les scripts d'opération plateforme utilisables indépendamment
-de `platform-cicd`. Il permet de retirer des applications et de gérer les
-credentials ArgoCD sans checkout actif de `platform-cicd`. L'ajout d'une
+de `platform-bootstrap`. Il permet de retirer des applications et de gérer les
+credentials ArgoCD sans checkout actif de `platform-bootstrap`. L'ajout d'une
 application se fait par pull/merge request directe sur `platform-gitops`
 (pas de script dédié, voir "Pipeline d'onboarding automatique" ci-dessous).
 
@@ -42,7 +42,7 @@ Depuis l'automatisation ajoutée dans `platform-gitops` (pipeline
 GitLab et mirroré vers GitHub), une simple MR ajoutant
 `argocd/apps/<app>.yaml` (avec au minimum `name`, `description` et `services`)
 suffit à déclencher :
-1. la régénération des manifests ArgoCD (`platform-cicd/scripts/render-argocd-apps.py`) ;
+1. la régénération des manifests ArgoCD (`platform-bootstrap/scripts/render-argocd-apps.py`) ;
 2. la régénération de `gitlab-projects-iac/terraform/apps.auto.tfvars.json`
    (`toolbox/scripts/render-gitlab-projects.py`), qui fait ensuite créer/mettre
    à jour les projets GitLab via Terraform.
@@ -83,7 +83,7 @@ vérification manuelle pour l'instant.
 ## Ce qu'il ne faut pas faire
 
 - Ne pas modifier `platform_inventory.py` sans répercuter le changement dans
-  `platform-cicd/scripts/platform_inventory.py` — les deux fichiers doivent
+  `platform-bootstrap/scripts/platform_inventory.py` — les deux fichiers doivent
   rester synchronisés.
 - Ne pas supprimer physiquement les dépôts GitLab applicatifs depuis les scripts
   de suppression — ils retirent uniquement l'entrée de l'inventaire.

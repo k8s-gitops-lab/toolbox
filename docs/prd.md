@@ -4,10 +4,10 @@
 
 `toolbox` regroupe les scripts réutilisables pour piloter les
 projets du POC sans dépendre directement d'un checkout actif de
-`platform-cicd`.
+`platform-bootstrap`.
 
 La vision globale, le modèle d'onboarding et les limites du POC sont dans
-`../../control-plane/docs/prd.md`.
+`../../cockpit/docs/prd.md`.
 
 ## Produit attendu
 
