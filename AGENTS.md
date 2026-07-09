@@ -88,3 +88,10 @@ vérification manuelle pour l'instant.
 - Ne pas supprimer physiquement les dépôts GitLab applicatifs depuis les scripts
   de suppression — ils retirent uniquement l'entrée de l'inventaire.
 - Ne pas committer de tokens ou mots de passe dans ce dépôt.
+
+## Gouvernance du développement
+
+Ce repo fait partie de la plateforme poc-devops : toute contribution suit
+les trois axes de maîtrise (produit, code, architecture) définis dans
+`cockpit/AGENTS.md`, section « Gouvernance du développement » — PRD et
+backlog dans `cockpit/docs/`.
